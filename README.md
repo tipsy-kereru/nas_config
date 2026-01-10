@@ -10,7 +10,7 @@
 - **Sonarr**: TV 시리즈 자동화
 - **Radarr**: 영화 자동화
 - **Bazarr**: 자막 관리
-- **Flaresolverr**: Cloudflare 우회
+- **ByParr**: Cloudflare 우회 (FlareSolverr 대체)
 - **qBittorrent**: 다운로드 클라이언트
 
 ### 2. 사진 관리 스택 (`immich/`)
@@ -39,9 +39,8 @@ cp .env.example .env
 ```bash
 cd immich
 cp .env.example .env
-cp db_password.txt.example db_password.txt
 ```
-- `db_password.txt` 파일에 데이터베이스에서 사용할 비밀번호를 입력하세요.
+- `.env` 파일을 열어 `DB_PASSWORD`를 데이터베이스에서 사용할 비밀번호로 수정하세요.
 
 ### 3. 컨테이너 실행
 각 폴더에서 다음 명령어를 실행합니다.
@@ -50,11 +49,14 @@ cp db_password.txt.example db_password.txt
 docker compose up -d
 ```
 
-### 4. 업데이트 방법 (Emby 스택 전용)
-이미지를 최신 버전으로 업데이트하려면 제공된 스크립트를 실행하세요.
+### 4. 업데이트 방법
+이미지를 최신 버전으로 업데이트하려면 각 폴더에 제공된 스크립트를 실행하세요.
 ```bash
-cd emby
-./update.sh
+# Emby 스택 업데이트
+cd emby && ./update.sh
+
+# Immich 스택 업데이트
+cd immich && ./update.sh
 ```
 *이 스크립트는 최신 이미지를 다운로드하고, 컨테이너를 재시작한 뒤 오래된 이미지를 정리합니다.*
 
@@ -67,7 +69,7 @@ cd emby
 > `.env` 파일과 `db_password.txt` 파일에는 비밀번호 및 시스템 경로 등 민감한 정보가 포함되어 있습니다. 
 > 이 파일들은 절대 GitHub과 같은 공용 저장소에 직접 올리지 마세요. (현재 `.gitignore` 설정으로 방지되어 있습니다.)
 
-- **Docker Secrets**: Immich 스택은 DB 비밀번호 보안을 위해 Docker Secrets 방식을 사용합니다. 암호는 환경 변수가 아닌 파일 시스템(`/run/secrets/DB_PASSWORD`)을 통해 전달되어 안전합니다.
+- **환경 변수 관리**: 각 스택은 `.env` 파일을 통해 데이터베이스 비밀번호와 파일 저장 경로를 관리합니다.
 - **네트워크**: `media-network`라는 이름의 전용 브리지 네트워크를 통해 서비스 간 통신이 이루어집니다.
 
 ---
@@ -78,8 +80,8 @@ cd emby
 ├── emby/
 │   ├── docker-compose.yml
 │   └── .env.example
-└── immich/
-    ├── docker-compose.yml
-    ├── .env.example
-    └── db_password.txt.example
+├── immich/
+│   ├── docker-compose.yml
+│   ├── .env.example
+│   └── update.sh
 ```
