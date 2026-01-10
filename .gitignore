@@ -1,10 +1,10 @@
 # Environment variables
-# .env
-# **/.env
-# **/*.env
+.env
+**/.env
+**/*.env
 
-# # Secrets
-# **/db_password.txt
+# Secrets
+**/db_password.txt
 
 # Media and Config storage
 config/
