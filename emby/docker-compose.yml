@@ -109,17 +109,17 @@ services:
   #         memory: 128M
 
   cloudflare-bypasser:
-    image: makonix/cloudflare-bypasser:latest
+    image: yoori/flare-bypasser:latest
     container_name: ${STACK_PREFIX:-media}-cloudflare-bypasser
     restart: unless-stopped
     networks: ["media-network"]
     ports:
-      - "8000:8000"
+      - "8080:8080"
     deploy:
       resources:
         limits:
           cpus: '0.5'
-          memory: 256M
+          memory: 512M
 
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
