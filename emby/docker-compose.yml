@@ -89,24 +89,24 @@ services:
           cpus: '0.5'
           memory: 128M
 
-  # flaresolverr:
-  #   image: ghcr.io/flaresolverr/flaresolverr:latest
-  #   container_name: ${STACK_PREFIX:-media}-flaresolverr
-  #   environment:
-  #     - LOG_LEVEL=info
-  #     - TZ=${TZ}
-  #     - HEADLESS=true
-  #     # - CAPTCHA_SOLVER=none  # 기본값
-  #     # - BROWSER_TIMEOUT=60000
-  #   ports:
-  #     - "8191:8191"
-  #   restart: unless-stopped
-  #   networks: ["media-network"]
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         cpus: '0.5'
-  #         memory: 128M
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: ${STACK_PREFIX:-media}-flaresolverr
+    environment:
+      - LOG_LEVEL=info
+      - TZ=${TZ}
+      - HEADLESS=true
+      # - CAPTCHA_SOLVER=none  # 기본값
+      # - BROWSER_TIMEOUT=60000
+    ports:
+      - "8191:8191"
+    restart: unless-stopped
+    networks: ["media-network"]
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128M
 
   cloudflare-bypasser:
     image: makonix/cloudflare-bypasser:latest
