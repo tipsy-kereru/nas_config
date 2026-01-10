@@ -16,7 +16,7 @@ services:
     ports:
       - "${PROWLARR_PORT}:9696"
     restart: unless-stopped
-    networks: ["${DOCKER_NETWORK_NAME:-media-network}"]
+    networks: ["media-network"]
     deploy:
       resources:
         limits:
@@ -38,7 +38,7 @@ services:
     ports:
       - "${SONARR_PORT}:8989"
     restart: unless-stopped
-    networks: ["${DOCKER_NETWORK_NAME:-media-network}"]
+    networks: ["media-network"]
     deploy:
       resources:
         limits:
@@ -60,7 +60,7 @@ services:
     ports:
       - "${RADARR_PORT}:7878"
     restart: unless-stopped
-    networks: ["${DOCKER_NETWORK_NAME:-media-network}"]
+    networks: ["media-network"]
     deploy:
       resources:
         limits:
@@ -82,7 +82,7 @@ services:
     ports:
       - "${BAZARR_PORT}:6767"
     restart: unless-stopped
-    networks: ["${DOCKER_NETWORK_NAME:-media-network}"]
+    networks: ["media-network"]
     deploy:
       resources:
         limits:
@@ -101,7 +101,7 @@ services:
     ports:
       - "8191:8191"
     restart: unless-stopped
-    networks: ["${DOCKER_NETWORK_NAME:-media-network}"]
+    networks: ["media-network"]
     deploy:
       resources:
         limits:
@@ -127,7 +127,7 @@ services:
       - "${QBIT_INCOMING_PORT}:${QBIT_INCOMING_PORT}"
       - "${QBIT_INCOMING_PORT}:${QBIT_INCOMING_PORT}/udp"
     restart: unless-stopped
-    networks: ["${DOCKER_NETWORK_NAME:-media-network}"]
+    networks: ["media-network"]
     deploy:
       resources:
         limits:
@@ -153,7 +153,7 @@ services:
       - "${EMBY_HTTP_PORT}:8096"
       - "${EMBY_HTTPS_PORT}:8920"
     restart: unless-stopped
-    networks: ["${DOCKER_NETWORK_NAME:-media-network}"]
+    networks: ["media-network"]
     deploy:
       resources:
         limits:
@@ -161,5 +161,6 @@ services:
           memory: 1.5G
 
 networks:
-  ${DOCKER_NETWORK_NAME:-media-network}:
+  media-network:
+    name: ${DOCKER_NETWORK_NAME:-media-network}
     driver: bridge
