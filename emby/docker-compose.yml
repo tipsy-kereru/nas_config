@@ -1,0 +1,129 @@
+# docker compose up -d
+# 필요한 디렉터리는 미리 만들어두면 좋아요(아래 참조)
+
+name: ${COMPOSE_PROJECT_NAME:-media-stack}
+
+services:
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: ${STACK_PREFIX:-media}-prowlarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${CONFIG_ROOT}/prowlarr:/config
+    ports:
+      - "${PROWLARR_PORT}:9696"
+    restart: unless-stopped
+    networks: ["${DOCKER_NETWORK_NAME:-media-network}"]
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: ${STACK_PREFIX:-media}-sonarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - UMASK=${UMASK}
+    volumes:
+      - ${CONFIG_ROOT}/sonarr:/config
+      - ${MEDIA_ROOT}/tv:/tv
+      - ${MEDIA_ROOT}/downloads:/downloads
+    ports:
+      - "${SONARR_PORT}:8989"
+    restart: unless-stopped
+    networks: ["${DOCKER_NETWORK_NAME:-media-network}"]
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: ${STACK_PREFIX:-media}-radarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - UMASK=${UMASK}
+    volumes:
+      - ${CONFIG_ROOT}/radarr:/config
+      - ${MEDIA_ROOT}/movies:/movies
+      - ${MEDIA_ROOT}/downloads:/downloads
+    ports:
+      - "${RADARR_PORT}:7878"
+    restart: unless-stopped
+    networks: ["${DOCKER_NETWORK_NAME:-media-network}"]
+
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: ${STACK_PREFIX:-media}-bazarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - UMASK=${UMASK}
+    volumes:
+      - ${CONFIG_ROOT}/bazarr:/config
+      - ${MEDIA_ROOT}/tv:/tv
+      - ${MEDIA_ROOT}/movies:/movies
+    ports:
+      - "${BAZARR_PORT}:6767"
+    restart: unless-stopped
+    networks: ["${DOCKER_NETWORK_NAME:-media-network}"]
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: ${STACK_PREFIX:-media}-flaresolverr
+    environment:
+      - LOG_LEVEL=info
+      - TZ=${TZ}
+      - HEADLESS=true
+      # - CAPTCHA_SOLVER=none  # 기본값
+      # - BROWSER_TIMEOUT=60000
+    ports:
+      - "8191:8191"
+    restart: unless-stopped
+    networks: ["${DOCKER_NETWORK_NAME:-media-network}"]
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: ${STACK_PREFIX:-media}-qbittorrent
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - UMASK=${UMASK}
+      - WEBUI_PORT=${QBIT_WEBUI_PORT}
+      - INCOMING_PORT=${QBIT_INCOMING_PORT}
+    volumes:
+      - ${CONFIG_ROOT}/qbittorrent:/config
+      - ${MEDIA_ROOT}/downloads:/downloads
+      - ${MEDIA_ROOT}/incomplete:/incomplete
+    ports:
+      - "${QBIT_WEBUI_PORT}:${QBIT_WEBUI_PORT}"
+      - "${QBIT_INCOMING_PORT}:${QBIT_INCOMING_PORT}"
+      - "${QBIT_INCOMING_PORT}:${QBIT_INCOMING_PORT}/udp"
+    restart: unless-stopped
+    networks: ["${DOCKER_NETWORK_NAME:-media-network}"]
+
+  emby:
+    image: lscr.io/linuxserver/emby:latest
+    container_name: ${STACK_PREFIX:-media}-emby
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - UMASK=${UMASK}
+    devices:
+      - /dev/dri:/dev/dri   # 인텔 iGPU(QSV/VA-API)
+    volumes:
+      - ${CONFIG_ROOT}/emby:/config
+      - ${MEDIA_ROOT}/movies:/data/movies
+      - ${MEDIA_ROOT}/tv:/data/tvshows
+    ports:
+      - "${EMBY_HTTP_PORT}:8096"
+      - "${EMBY_HTTPS_PORT}:8920"
+    restart: unless-stopped
+    networks: ["${DOCKER_NETWORK_NAME:-media-network}"]
+
+networks:
+  ${DOCKER_NETWORK_NAME:-media-network}:
+    driver: bridge
