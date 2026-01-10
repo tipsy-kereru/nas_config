@@ -108,13 +108,13 @@ services:
   #         cpus: '0.5'
   #         memory: 128M
 
-  cloudflare-bypasser:
-    image: yoori/flare-bypasser:latest
-    container_name: ${STACK_PREFIX:-media}-cloudflare-bypasser
+  byparr:
+    image: ghcr.io/thephaseless/byparr:latest
+    container_name: ${STACK_PREFIX:-media}-byparr
     restart: unless-stopped
-    networks: ["media-network"]
     ports:
-      - "8080:8080"
+      - "8191:8191"
+    networks: ["media-network"]
     deploy:
       resources:
         limits:
