@@ -1,0 +1,23 @@
+# Environment variables
+# .env
+# **/.env
+# **/*.env
+
+# # Secrets
+# **/db_password.txt
+
+# Media and Config storage
+config/
+**/config/
+library/
+**/library/
+postgres/
+**/postgres/
+downloads/
+**/downloads/
+incomplete/
+**/incomplete/
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,77 @@
+# 미디어 서버 설정 (NAS Config)
+
+이 저장소는 Docker Compose를 이용한 개인 미디어 서버 및 사진 관리 시스템(Immich) 설정 파일들을 포함하고 있습니다.
+
+## 🚀 포함된 서비스
+
+### 1. 전용 미디어 스택 (`emby/`)
+- **Emby**: 미디어 스트리밍 서버
+- **Prowlarr**: 인덱서 매니저
+- **Sonarr**: TV 시리즈 자동화
+- **Radarr**: 영화 자동화
+- **Bazarr**: 자막 관리
+- **Flaresolverr**: Cloudflare 우회
+- **qBittorrent**: 다운로드 클라이언트
+
+### 2. 사진 관리 스택 (`immich/`)
+- **Immich**: 고성능 자가 호스팅 사진/비디오 관리 솔루션 (Google Photos 대체)
+
+---
+
+## 🛠 설치 및 사용 방법
+
+### 1. 사전 준비
+- Docker 및 Docker Compose 플러그인이 설치되어 있어야 합니다.
+- 자신의 `PUID`와 `PGID`를 확인하려면 터미널에서 `id` 명령어를 입력하세요.
+
+### 2. 설정 파일 작성
+각 스택 폴더(`/emby`, `/immich`)에서 템플릿 파일을 복사하여 실제 설정 파일을 만듭니다.
+
+#### Emby 스택 설정
+```bash
+cd emby
+cp .env.example .env
+```
+- `.env` 파일을 열어 `MEDIA_ROOT`를 실제 미디어가 저장된 경로로 수정하세요.
+- 필요에 따라 포트 번호를 수정하세요.
+
+#### Immich 스택 설정
+```bash
+cd immich
+cp .env.example .env
+cp db_password.txt.example db_password.txt
+```
+- `db_password.txt` 파일에 데이터베이스에서 사용할 비밀번호를 입력하세요.
+
+### 3. 컨테이너 실행
+각 폴더에서 다음 명령어를 실행합니다.
+
+```bash
+docker compose up -d
+```
+
+---
+
+## 🔒 보안 주의사항 (중요)
+
+> [!CAUTION]
+> **민감한 파일 노출 금지**
+> `.env` 파일과 `db_password.txt` 파일에는 비밀번호 및 시스템 경로 등 민감한 정보가 포함되어 있습니다. 
+> 이 파일들은 절대 GitHub과 같은 공용 저장소에 직접 올리지 마세요. (현재 `.gitignore` 설정으로 방지되어 있습니다.)
+
+- **Docker Secrets**: Immich 스택은 DB 비밀번호 보안을 위해 Docker Secrets 방식을 사용합니다. 암호는 환경 변수가 아닌 파일 시스템(`/run/secrets/DB_PASSWORD`)을 통해 전달되어 안전합니다.
+- **네트워크**: `media-network`라는 이름의 전용 브리지 네트워크를 통해 서비스 간 통신이 이루어집니다.
+
+---
+
+## 📂 디렉토리 구조
+```text
+.
+├── emby/
+│   ├── docker-compose.yml
+│   └── .env.example
+└── immich/
+    ├── docker-compose.yml
+    ├── .env.example
+    └── db_password.txt.example
+```
