@@ -36,6 +36,11 @@ services:
       - DB_PASSWORD
     environment:
       DB_PASSWORD_FILE: /run/secrets/DB_PASSWORD
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 768M
 
   immich-machine-learning:
     container_name: immich_machine_learning
@@ -58,6 +63,12 @@ services:
       - DB_PASSWORD
     environment:
       DB_PASSWORD_FILE: /run/secrets/DB_PASSWORD
+      IMMICH_METRICS: "false"
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 1024M
 
   redis:
     container_name: immich_redis
@@ -67,6 +78,11 @@ services:
     restart: always
     networks:
       - immich-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 64M
 
   database:
     container_name: immich_postgres
@@ -87,6 +103,11 @@ services:
       - immich-network
     secrets:
       - DB_PASSWORD
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
 
 volumes:
   model-cache:
