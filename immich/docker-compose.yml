@@ -32,10 +32,8 @@ services:
       disable: false
     networks:
       - immich-network
-    secrets:
-      - DB_PASSWORD
     environment:
-      DB_PASSWORD_FILE: /run/secrets/DB_PASSWORD
+      DB_PASSWORD: ${DB_PASSWORD}
     deploy:
       resources:
         limits:
@@ -57,12 +55,8 @@ services:
     restart: always
     healthcheck:
       disable: false
-    networks:
-      - immich-network
-    secrets:
-      - DB_PASSWORD
     environment:
-      DB_PASSWORD_FILE: /run/secrets/DB_PASSWORD
+      DB_PASSWORD: ${DB_PASSWORD}
       IMMICH_METRICS: "false"
     deploy:
       resources:
@@ -90,7 +84,7 @@ services:
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_DB: ${DB_DATABASE_NAME}
-      POSTGRES_PASSWORD_FILE: /run/secrets/DB_PASSWORD
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_INITDB_ARGS: "--data-checksums"
       # Uncomment the DB_STORAGE_TYPE: 'HDD' var if your database doesn't stored on SSDs
       # DB_STORAGE_TYPE: 'HDD'
@@ -101,8 +95,6 @@ services:
     restart: always
     networks:
       - immich-network
-    secrets:
-      - DB_PASSWORD
     deploy:
       resources:
         limits:
@@ -116,6 +108,3 @@ networks:
   immich-network:
     driver: bridge
 
-secrets:
-  DB_PASSWORD:
-    file: db_password.txt
