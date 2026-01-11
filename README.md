@@ -16,6 +16,8 @@
 ### 2. 사진 관리 스택 (`immich/`)
 - **Immich**: 고성능 자가 호스팅 사진/비디오 관리 솔루션 (Google Photos 대체)
   - [CLI 사용 가이드](file:///home/kereru/Development/media-server-settings/immich/CLI_GUIDE.md): 대량 업로드를 위한 CLI 도구 설명
+  - [Immich-Go 사용 가이드](file:///home/kereru/Development/media-server-settings/immich/IMMICH_GO_GUIDE.md): 더욱 강력한 대안 도구 사용법
+  - [DB 위치 변경 가이드](file:///home/kereru/Development/media-server-settings/immich/DB_RELOCATION_GUIDE.md): 데이터베이스 저장 폴더 이동 방법
 
 ---
 

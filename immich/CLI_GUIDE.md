@@ -86,6 +86,25 @@ DNS 문제나 프록시 지연으로 연결이 끊길 수 있습니다. `immich 
 사진이 올라가는 즉시 Immich 서버는 섬네일 생성, 얼굴 인식 등의 작업을 시작합니다. 이 작업들이 CPU를 많이 점유하면 업로드 응답이 늦어질 수 있습니다.
 - **해결책**: Immich 웹 UI > **Administration > Job Settings**에서 `Thumbnail Generation`, `Library`, `Machine Learning` 등의 작업을 잠시 **PAUSE** 하고 업로드를 진행하세요.
 
+### ④ 리버스 프록시 설정 (Nginx 등)
+만약 Nginx나 프록시 서버를 사용 중이라면, 큰 파일 업로드 시 타임아웃이 발생할 수 있습니다. Nginx 설정에서 다음 값을 충분히 크게(예: 50G) 잡아주세요.
+```nginx
+client_max_body_size 50000M;
+proxy_read_timeout 600s;
+proxy_send_timeout 600s;
+```
+
+---
+
+## 6. 더 강력한 대안: `immich-go`
+
+만약 공식 CLI가 계속 실패한다면, 개발자 커뮤니티에서 대용량 업로드용으로 훨씬 안정적이라고 평가받는 [**immich-go**](https://github.com/simulot/immich-go) 사용을 강력히 권장합니다. Go 언어로 작성되어 Node.js의 네트워크 한계를 넘어서며, 특히 테이크아웃 데이터나 수십 GB 단위의 업로드에 매우 강합니다.
+
+### immich-go 주요 장점:
+- 네트워크 끊김 시 더 똑똑한 재시도 전략
+- 메모리 사용량 최적화 (4GB RAM 환경에 유리)
+- 스택 처리(RAW+JPG) 및 구글 포토 마이그레이션 완벽 지원
+
 ---
 
 > [!TIP]
