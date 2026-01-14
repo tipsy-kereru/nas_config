@@ -37,8 +37,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1.5'
-          memory: 1GB
+          cpus: '1.0'
+          memory: 768M
 
   immich-machine-learning:
     container_name: immich_machine_learning
@@ -61,8 +61,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '2.0'
-          memory: 2GB
+          cpus: '1.5'
+          memory: 1024M
 
   redis:
     container_name: immich_redis
@@ -76,7 +76,7 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: 128M
+          memory: 64M
 
   database:
     container_name: immich_postgres
@@ -101,7 +101,7 @@ services:
       resources:
         limits:
           cpus: '1.0'
-          memory: 768M
+          memory: 512M
 
 volumes:
   model-cache:

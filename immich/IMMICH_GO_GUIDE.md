@@ -67,6 +67,10 @@ immich-go -s http://<서버-IP>:2283 -k <내-API-KEY> upload from-folder --folde
 Immich 서버에 업로드되면, 파일은 서버의 **Administration > Settings > Storage Template** 설정에 따라 자동으로 분류되어 저장됩니다. (예: `2024/05/사진.jpg`)
 `immich-go`로 업로드하는 모든 파일은 이 서버 규칙을 따르므로, 로컬의 폴더 구조와 상관없이 서버가 알아서 정리해 줍니다.
 
+> [!CAUTION]
+> **중요: 로컬 파일 삭제 기능 없음**
+> `immich-go`는 안전을 위해 업로드 후 로컬 원본 파일을 자동으로 삭제하는 기능을 제공하지 않습니다. 스토리지가 부족하다면 업로드 완료를 확인한 후 수동으로 삭제해야 합니다.
+
 ---
 
 > [!IMPORTANT]
