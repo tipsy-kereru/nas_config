@@ -1,0 +1,107 @@
+services:
+  # 1. DNS: Blocky (가장 가벼운 DNS)
+  blocky:
+    image: ghcr.io/0xerr0r/blocky
+    container_name: blocky
+    restart: unless-stopped
+    ports:
+      - "53:53/udp"
+      - "53:53/tcp"
+    networks:
+      - infra_net
+    volumes:
+      - ./data/blocky/config.yml:/app/config.yml
+    deploy:
+      resources:
+        limits:
+          memory: 100M
+
+  # 2. Reverse Proxy: Caddy
+  caddy:
+    image: caddy:2-alpine
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - infra_net
+    volumes:
+      - ./data/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ./data/caddy/data:/data
+      - ./data/caddy/config:/config
+      - ./logs/caddy:/var/log/caddy
+    deploy:
+      resources:
+        limits:
+          memory: 200M
+
+  # 3. Auth: Authelia (SQLite 사용)
+  authelia:
+    image: authelia/authelia
+    container_name: authelia
+    restart: unless-stopped
+    networks:
+      - infra_net
+    environment:
+      - TZ=${TZ:-Pacific/Auckland}
+    volumes:
+      - ./data/authelia:/config
+      - ./logs/authelia:/var/log/authelia
+    deploy:
+      resources:
+        limits:
+          memory: 400M
+
+  # 4. Firewall: CrowdSec
+  crowdsec:
+    image: crowdsecurity/crowdsec
+    container_name: crowdsec
+    restart: unless-stopped
+    networks:
+      - infra_net
+    environment:
+      - COLLECTIONS=${COLLECTIONS:-crowdsecurity/caddy crowdsecurity/authelia}
+    volumes:
+      - ./data/crowdsec/config:/etc/crowdsec
+      - ./data/crowdsec/data:/var/lib/crowdsec/data
+      - ./logs/caddy:/var/log/caddy:ro
+      - ./logs/authelia:/var/log/authelia:ro
+    deploy:
+      resources:
+        limits:
+          memory: 300M
+
+  # 5. Password: Vaultwarden
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    networks:
+      - infra_net
+    environment:
+      - SIGNUPS_ALLOWED=${SIGNUPS_ALLOWED:-true}
+      - DOMAIN=https://${DOMAIN}
+    volumes:
+      - ./data/vaultwarden:/data
+    deploy:
+      resources:
+        limits:
+          memory: 200M
+
+  # 6. Maintenance: Watchtower
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 86400 --cleanup
+    deploy:
+      resources:
+        limits:
+          memory: 100M
+
+networks:
+  infra_net:
+    driver: bridge
