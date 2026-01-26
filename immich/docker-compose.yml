@@ -20,6 +20,7 @@ services:
       # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
       - ${UPLOAD_LOCATION:-./library}:/data
       - /etc/localtime:/etc/localtime:ro
+      - ./immich-config.json:/config/immich-config.json:ro
     env_file:
       - .env
     ports:
@@ -34,11 +35,12 @@ services:
       - immich-network
     environment:
       DB_PASSWORD: ${DB_PASSWORD}
+      IMMICH_CONFIG_FILE: /config/immich-config.json
     deploy:
       resources:
         limits:
-          cpus: '1.5'
-          memory: 1GB
+          cpus: '1.0'
+          memory: 768M
 
   immich-machine-learning:
     container_name: immich_machine_learning
@@ -58,11 +60,13 @@ services:
     environment:
       DB_PASSWORD: ${DB_PASSWORD}
       IMMICH_METRICS: "false"
+    networks:
+      - immich-network
     deploy:
       resources:
         limits:
-          cpus: '2.0'
-          memory: 2GB
+          cpus: '1.5'
+          memory: 1024M
 
   redis:
     container_name: immich_redis
@@ -76,7 +80,7 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: 128M
+          memory: 64M
 
   database:
     container_name: immich_postgres
@@ -101,7 +105,7 @@ services:
       resources:
         limits:
           cpus: '1.0'
-          memory: 768M
+          memory: 512M
 
 volumes:
   model-cache:

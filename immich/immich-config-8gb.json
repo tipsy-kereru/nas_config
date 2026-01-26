@@ -50,16 +50,16 @@
   },
   "job": {
     "backgroundTask": {
-      "concurrency": 1
+      "concurrency": 2
     },
     "faceDetection": {
-      "concurrency": 1
+      "concurrency": 2
     },
     "library": {
-      "concurrency": 1
+      "concurrency": 3
     },
     "metadataExtraction": {
-      "concurrency": 1
+      "concurrency": 2
     },
     "migration": {
       "concurrency": 1
@@ -68,7 +68,7 @@
       "concurrency": 1
     },
     "ocr": {
-      "concurrency": 1
+      "concurrency": 2
     },
     "search": {
       "concurrency": 1
@@ -77,10 +77,10 @@
       "concurrency": 1
     },
     "smartSearch": {
-      "concurrency": 1
+      "concurrency": 2
     },
     "thumbnailGeneration": {
-      "concurrency": 1
+      "concurrency": 3
     },
     "videoConversion": {
       "concurrency": 1
